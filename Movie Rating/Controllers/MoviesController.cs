@@ -7,9 +7,9 @@ namespace Movie_Rating.Controllers
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private ILogger _logger;
+        private ILogger<MoviesController> _logger;
 
-        public MoviesController(ILogger logger)
+        public MoviesController(ILogger<MoviesController> logger)
         {
             _logger = logger;
         }
