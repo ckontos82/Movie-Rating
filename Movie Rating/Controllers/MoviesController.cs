@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Movie_Rating.Controllers
 {
@@ -23,27 +24,22 @@ namespace Movie_Rating.Controllers
                 new Movie {Id = 1, Title = "The Godfather", Year = 1972},
                 new Movie {Id = 2, Title = "Schindler's List", Year = 1993},
                 new Movie {Id = 3, Title = "WALL·E", Year = 2008},
-                new Movie {Id = 4, Title = "The Matrix", Year = 1999},
-                new Movie {Id = 5, Title = "A bad movie", Year = 360 },
-                new Movie {Id = 6, Title = "Another bad movie", Year = 12}
+                new Movie {Id = 4, Title = "The Matrix", Year = 1999}
             };
 
-            var invalidMovieResults = movies.Select(movie =>
-            {
-                var context = new ValidationContext(movie);
-                var results = new List<ValidationResult>();
-                bool isValid = Validator.TryValidateObject(movie, context, results, true);
-                return isValid ? null : results;
-            }).Where(results => results != null).ToList();
+            var validationResults = movies.Select(movie =>
+                {
+                    var context = new ValidationContext(movie);
+                    var results = new List<ValidationResult>();
+                    Validator.TryValidateObject(movie, context, results, true);
+                    return new { Movie = movie, Results = results };
+                })
+                .Where(x => x.Results.Any())
+                .ToList();
 
-            if (invalidMovieResults.Any())
-            {
-                return BadRequest(invalidMovieResults.SelectMany(x => x).ToList());
-            }
-            else
-            return Ok(movies);
+            return validationResults.Any()
+                ? BadRequest(validationResults.SelectMany(x => x.Results).ToList())
+                : Ok(movies);
         }
-
-
     }
 }
