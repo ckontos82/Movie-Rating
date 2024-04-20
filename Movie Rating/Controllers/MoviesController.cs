@@ -21,7 +21,8 @@ namespace Movie_Rating.Controllers
             {
                 new Movie {Id = 1, Title = "The Godfather", Year = 1972},
                 new Movie {Id = 2, Title = "Schindler's List", Year = 1993},
-                new Movie {Id = 3, Title = "WALL·E", Year = 2008}
+                new Movie {Id = 3, Title = "WALL·E", Year = 2008},
+                new Movie {Id = 4, Title = "The Matrix", Year = 1999}
             };
         }
     }
