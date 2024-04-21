@@ -63,14 +63,15 @@ namespace Movie_Rating.Controllers
             var results = new List<ValidationResult>();
             bool isValid = Validator.TryValidateObject(movie, context, results, true);
 
-            Func<Movie, IActionResult> addMovie = (m) =>
+            if (isValid)
             {
-                m.Id = _movies.Any() ? _movies.Max(x => x.Id) + 1 : 1;
-                _movies.Add(m);
-                return CreatedAtAction(nameof(GetById), new { id = m.Id }, m);
-            };
+                movie.Id = _movies.Any() ? _movies.Max(x => x.Id) + 1 : 1;
+                _movies.Add(movie);
+            }
 
-            return isValid ? addMovie(movie) : BadRequest(results);
+            return isValid
+                ? CreatedAtAction(nameof(GetById), new { id = movie.Id }, movie)
+                : BadRequest(results);
         }
 
         [HttpPost("bulk")]
