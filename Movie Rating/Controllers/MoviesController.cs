@@ -72,5 +72,30 @@ namespace Movie_Rating.Controllers
 
             return isValid ? addMovie(movie) : BadRequest(results);
         }
+
+        [HttpPost("addmovies")]
+        public ActionResult<IEnumerable<Movie>> Post([FromBody] IEnumerable<Movie> movies)
+        {
+            var validationResults = movies.Select(movie =>
+            {
+                var context = new ValidationContext(movie);
+                var results = new List<ValidationResult>();
+                Validator.TryValidateObject(movie, context, results, true);
+                return new { Movie = movie, Results = results };
+            })
+                .Where(x => x.Results.Any())
+                .ToList();
+
+            if (!validationResults.Any())
+                movies.ToList().ForEach(m =>
+                {
+                    m.Id = _movies.Max(x => x.Id) + 1;
+                    _movies.Add(m);
+                });            
+
+            return validationResults.Any() ?
+                BadRequest(validationResults.SelectMany(x => x.Results).ToList()) :
+                Ok(movies);
+        }
     }
 }
