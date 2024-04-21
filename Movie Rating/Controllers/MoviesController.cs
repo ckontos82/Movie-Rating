@@ -86,16 +86,16 @@ namespace Movie_Rating.Controllers
                 .Where(x => x.Results.Any())
                 .ToList();
 
-            if (!validationResults.Any())
-                movies.ToList().ForEach(m =>
-                {
-                    m.Id = _movies.Max(x => x.Id) + 1;
-                    _movies.Add(m);
-                });            
+            _movies.AddRange(validationResults.Any()
+                ? Enumerable.Empty<Movie>()
+                : movies.Select(m => {
+                    m.Id = _movies.Max(x => x.Id) + 1; 
+                    return m; 
+                }));
 
-            return validationResults.Any() ?
-                BadRequest(validationResults.SelectMany(x => x.Results).ToList()) :
-                Ok(movies);
+            return validationResults.Any()
+                ? BadRequest(validationResults.SelectMany(x => x.Results).ToList())
+                : Ok(movies);
         }
     }
 }
