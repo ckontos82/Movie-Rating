@@ -27,7 +27,7 @@ namespace Movie_Rating.Controllers
             _logger = logger;
         }
 
-        [HttpGet("getbyid/{id}")]
+        [HttpGet("{id}")]
         public ActionResult<Movie> GetById(int id)
         {
             var movie = _movies.FirstOrDefault(m => m.Id == id);
@@ -38,7 +38,7 @@ namespace Movie_Rating.Controllers
             return movie;
         }
 
-        [HttpGet("getmovies")]
+        [HttpGet]
         public ActionResult<IEnumerable<Movie>> Get()
         {
             var validationResults = _movies.Select(movie =>
@@ -56,7 +56,7 @@ namespace Movie_Rating.Controllers
                 : Ok(_movies);
         }
 
-        [HttpPost("addmovie")]
+        [HttpPost]
         public IActionResult Post([FromBody] Movie movie)
         {
             var context = new ValidationContext(movie);
@@ -73,7 +73,7 @@ namespace Movie_Rating.Controllers
             return isValid ? addMovie(movie) : BadRequest(results);
         }
 
-        [HttpPost("addmovies")]
+        [HttpPost("bulk")]
         public ActionResult<IEnumerable<Movie>> Post([FromBody] IEnumerable<Movie> movies)
         {
             var validationResults = movies.Select(movie =>
