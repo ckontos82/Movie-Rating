@@ -14,10 +14,10 @@ namespace Movie_Rating.Controllers
         //This private List will be removed and replaced with db support.
         private static List<Movie> _movies = new List<Movie>
         {
-            new Movie { Id = 1, Title = "The Godfather", Year = 1972 },
-            new Movie { Id = 2, Title = "Schindler's List", Year = 1993 },
-            new Movie { Id = 3, Title = "WALL·E", Year = 2008 },
-            new Movie { Id = 4, Title = "The Matrix", Year = 1999 }
+            new Movie { Id = 1, Title = "The Godfather", Year = 1972, Rating = 4.85},
+            new Movie { Id = 2, Title = "Schindler's List", Year = 1993, Rating = 4.95 },
+            new Movie { Id = 3, Title = "WALL·E", Year = 2008, Rating = 4.37 },
+            new Movie { Id = 4, Title = "The Matrix", Year = 1999, Rating = 4.81 }
         };
 
         private ILogger<MoviesController> _logger;
